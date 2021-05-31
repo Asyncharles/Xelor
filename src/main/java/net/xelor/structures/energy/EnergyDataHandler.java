@@ -7,8 +7,8 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class EnergyDataHandler extends DataContainer<EnergyStructure> {
-    private final Map<Long, EnergyStructure> dataMap;
+public class EnergyDataHandler extends DataContainer<EnergyData> {
+    private final Map<Long, EnergyData> dataMap;
 
     public EnergyDataHandler() {
         dataMap = new HashMap<>();
@@ -16,7 +16,7 @@ public class EnergyDataHandler extends DataContainer<EnergyStructure> {
 
     public boolean addPermanentData(long timestamp, double amount, EnergyType type) {
         try {
-            dataMap.put(timestamp, new EnergyStructure(amount, type, true));
+            dataMap.put(timestamp, new EnergyData(amount, type, true));
             return true;
         } catch (Exception e) {
             return false;
@@ -25,7 +25,7 @@ public class EnergyDataHandler extends DataContainer<EnergyStructure> {
 
     public boolean addData(long timestamp, double amount, EnergyType type, long duration) {
         try {
-            dataMap.put(timestamp, new EnergyStructure(amount, type, duration));
+            dataMap.put(timestamp, new EnergyData(amount, type, duration));
             return true;
         } catch (Exception e) {
             return false;
@@ -33,19 +33,19 @@ public class EnergyDataHandler extends DataContainer<EnergyStructure> {
     }
 
     @Override
-    protected Map<Long, EnergyStructure> getDataMap() {
+    protected Map<Long, EnergyData> getDataMap() {
         return dataMap;
     }
 
     @Override
-    public <K> List<EnergyStructure> retrieveData(K param, long... a) throws IllegalAccessException {
+    public <K> List<EnergyData> retrieveData(K param, long... a) throws IllegalAccessException {
         final boolean isNull = param == null;
-        final List<EnergyStructure> energyStructures = new ArrayList<>();
+        final List<EnergyData> energyStructures = new ArrayList<>();
         if (a.length == 1) {
             if (isNull) {
                 return Collections.singletonList(getDataMap().get(a[0]));
             }
-            for (Map.Entry<Long, EnergyStructure> entry : dataMap.entrySet()) {
+            for (Map.Entry<Long, EnergyData> entry : dataMap.entrySet()) {
                 if (entry.getKey().compareTo(a[0]) == 0) {
                     Class<? extends Object> clazz = param.getClass();
                     for (Field field : entry.getValue().getClass().getFields()) {
@@ -58,11 +58,11 @@ public class EnergyDataHandler extends DataContainer<EnergyStructure> {
                 }
             }
         } else if (a.length == 2) {
+            final List<EnergyData> e = dataMap.entrySet().stream().filter(v -> v.getKey() > a[0] && v.getKey() < a[1]).map(Map.Entry::getValue).collect(Collectors.toList());
             if (isNull) {
-                energyStructures.addAll(dataMap.entrySet().stream().filter(v -> v.getKey() > a[0] && v.getKey() < a[1]).map(Map.Entry::getValue).collect(Collectors.toList()));
+                return e;
             } else {
-                List<EnergyStructure> e = dataMap.entrySet().stream().filter(v -> v.getKey() > a[0] && v.getKey() < a[1]).map(Map.Entry::getValue).collect(Collectors.toList());
-                for (EnergyStructure structure : e) {
+                for (EnergyData structure : e) {
                     Class<? extends Object> clazz = param.getClass();
                     for (Field field : structure.getClass().getFields()) {
                         if (field.getType() == clazz) {
