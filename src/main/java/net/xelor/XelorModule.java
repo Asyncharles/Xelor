@@ -18,14 +18,14 @@ public class XelorModule {
 
     public static boolean shutdown(ShutdownType type, String err) {
         if (instance != null) {
-            if (type == ShutdownType.KILL && err.isBlank()) {
+            if (type == ShutdownType.KILL && err.isEmpty()) {
                 err = "Error 509";
             }
             if (type == ShutdownType.KILL || type == ShutdownType.HARD) {
                 Logger.severe(err);
                 instance = null;
             } else {
-                Logger.info(err.isBlank() && err.isEmpty() ? "Shutdown" : "Shutdown" + err);
+                Logger.info(err.isEmpty() ? "Shutdown" : "Shutdown" + err);
                 instance = null;
             }
             return true;
