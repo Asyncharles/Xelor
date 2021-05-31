@@ -1,7 +1,6 @@
 package net.xelor.structures.energy;
 
 import net.xelor.structures.DataContainer;
-import net.xelor.structures.energy.types.EnergyType;
 
 import java.lang.reflect.Field;
 import java.util.*;

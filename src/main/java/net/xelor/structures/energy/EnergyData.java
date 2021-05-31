@@ -1,7 +1,5 @@
 package net.xelor.structures.energy;
 
-import net.xelor.structures.energy.types.EnergyType;
-
 public class EnergyData {
     private final double a;
     private final EnergyType type;
