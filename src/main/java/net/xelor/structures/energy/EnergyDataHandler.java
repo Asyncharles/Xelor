@@ -38,8 +38,8 @@ public class EnergyDataHandler extends DataContainer<EnergyData> {
     }
 
     @Override
-    public <K> List<EnergyData> retrieveData(K param, long... a) throws IllegalAccessException {
-        final boolean isNull = param == null;
+    public <K> List<EnergyData> retrieveData(String fieldName, K fieldValue, long... a) throws IllegalAccessException {
+        final boolean isNull = fieldValue == null && fieldName == null;
         final List<EnergyData> energyStructures = new ArrayList<>();
         if (a.length == 1) {
             if (isNull) {
@@ -47,10 +47,9 @@ public class EnergyDataHandler extends DataContainer<EnergyData> {
             }
             for (Map.Entry<Long, EnergyData> entry : dataMap.entrySet()) {
                 if (entry.getKey().compareTo(a[0]) == 0) {
-                    Class<? extends Object> clazz = param.getClass();
                     for (Field field : entry.getValue().getClass().getFields()) {
-                        if (field.getType() == clazz) {
-                            if (field.get(clazz) == param) {
+                        if (field.getName().equalsIgnoreCase(fieldName)) {
+                            if (field.get(fieldValue.getClass()) == fieldValue) {
                                 energyStructures.add(entry.getValue());
                             }
                         }
@@ -63,10 +62,9 @@ public class EnergyDataHandler extends DataContainer<EnergyData> {
                 return e;
             } else {
                 for (EnergyData structure : e) {
-                    Class<? extends Object> clazz = param.getClass();
                     for (Field field : structure.getClass().getFields()) {
-                        if (field.getType() == clazz) {
-                            if (field.get(clazz) == param) {
+                        if (field.getName().equalsIgnoreCase(fieldName)) {
+                            if (field.get(fieldValue.getClass()) == fieldValue) {
                                 energyStructures.add(structure);
                             }
                         }
