@@ -7,4 +7,4 @@ Please note that the Xelor AI is still under heavy development, and that the pro
 If you wish to report a bug, you free to open an issue or to contact us via email : xelor.services@gmail.com or discord : https://discord.gg/jchrtmynqT
 
 # Engine
-The Engine used to run the AI is not finished, and is still being developed and test.
+The Engine used to run the AI is not finished, and is still being developed and tested.
